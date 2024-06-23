@@ -10,7 +10,7 @@ const controller: RequestHandler<{}, {}, IAddClassBody> = async (req, res, next)
 
     // if teacherId is present check if document with provided id exists
     if (teacherId) {
-        const teacherDoc = await teacherService.getTeacher(teacherId)
+        const teacherDoc = await teacherService.getTeacherById(teacherId)
 
         if (teacherDoc === null) return res.status(400).json({ message: "teacher doesn't exist" })
     }

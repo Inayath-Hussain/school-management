@@ -1,6 +1,8 @@
 import { RequestHandler } from "express";
 import { sanitizeAll } from "../sanitizeBase";
 import { InValid, Valid } from "../interface";
+import { BodyError, containsErrors } from "../errors";
+import { PositiveNumberValidation } from "../commonValidation";
 
 
 export interface IAddClassBody {
@@ -15,7 +17,7 @@ export const validateAddClass: RequestHandler<{}, {}, IAddClassBody> = (req, res
 
     const { className, studentFees, teacherId, year } = req.body;
 
-    const errorObj = new BodyError("Invalid body");
+    const errorObj = new BodyError<IAddClassBody>("Invalid body");
 
 
     // validate className and teacherId
@@ -28,6 +30,8 @@ export const validateAddClass: RequestHandler<{}, {}, IAddClassBody> = (req, res
     }
 
 
+    const validatePositiveNumber = PositiveNumberValidation<keyof Pick<IAddClassBody, "year" | "studentFees">>()
+
     // validate year and studentFees
     const yearStatus = validatePositiveNumber("year", year)
     if (yearStatus.valid === false) errorObj.addFieldError("year", yearStatus.errorMessage)
@@ -39,7 +43,7 @@ export const validateAddClass: RequestHandler<{}, {}, IAddClassBody> = (req, res
 
 
 
-    if (Object.keys(errorObj.errors).length > 0) return res.status(422).json(errorObj);
+    if (containsErrors(errorObj)) return res.status(422).json(errorObj);
 
     return next();
 }
@@ -62,43 +66,5 @@ const validateClassName = (key: keyof Pick<IAddClassBody, "className" | "teacher
 
         default:
             return { valid: true }
-    }
-}
-
-
-
-const validatePositiveNumber = (key: keyof Pick<IAddClassBody, "studentFees" | "year">, value: any): Valid | InValid => {
-    switch (true) {
-        case (!value && value !== 0):
-            return { valid: false, errorMessage: `${key} is required` }
-
-        case (typeof value !== "number"):
-            return { valid: false, errorMessage: `${key} should be of type number` }
-
-
-        case (value <= 0):
-            return { valid: false, errorMessage: `${key} should be non zero positive number` }
-
-
-        default:
-            return { valid: true }
-    }
-}
-
-
-
-
-class BodyError {
-    message: string;
-    errors: Partial<Record<keyof IAddClassBody, string>>
-
-    constructor(message: string, errors = {}) {
-        this.message = message;
-        this.errors = errors
-    }
-
-
-    addFieldError(key: keyof BodyError["errors"], errorMessage: string) {
-        this.errors[key] = errorMessage;
     }
 }
