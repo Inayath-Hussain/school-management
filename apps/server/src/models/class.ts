@@ -7,7 +7,8 @@ const classSchema = new Schema({
     },
     className: {
         type: String,
-        required: true
+        required: true,
+        index: true
     },
     studentFees: {
         type: Number,
@@ -17,6 +18,10 @@ const classSchema = new Schema({
     teacher: {
         type: Schema.Types.ObjectId,
         ref: "teacher"
+    },
+    maxStudentsCapacity: {
+        type: Number,
+        default: 60
     },
     studentList: [{
         type: Schema.Types.ObjectId,

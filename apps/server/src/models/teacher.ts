@@ -22,10 +22,6 @@ const teacherSchema = new Schema({
     salary: {
         type: String,
         required: true
-    },
-    assignedClass: {
-        type: Schema.Types.ObjectId,
-        ref: "class"
     }
 })
 
