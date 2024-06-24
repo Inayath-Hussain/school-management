@@ -1,3 +1,4 @@
+import { GenderEnum } from "../models/student"
 import { InValid, Valid } from "./interface"
 
 
@@ -35,4 +36,12 @@ export const RequiredStringValidation = <T extends string>() => (key: T, value: 
         default:
             return { valid: true }
     }
+}
+
+
+
+export const validateGender = (gender: string): Valid | InValid => {
+    if (GenderEnum.find(g => g === gender) === undefined) return { valid: false, errorMessage: "Invalid value for gender" }
+
+    return { valid: true }
 }

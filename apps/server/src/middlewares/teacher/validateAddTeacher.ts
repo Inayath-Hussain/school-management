@@ -1,7 +1,7 @@
 import { RequestHandler } from "express";
 import { sanitizeAll } from "../sanitizeBase";
 import { InValid, Valid } from "../interface";
-import { PositiveNumberValidation, RequiredStringValidation } from "../commonValidation";
+import { PositiveNumberValidation, RequiredStringValidation, validateGender } from "../commonValidation";
 import { BodyError, containsErrors } from "../errors";
 import { GenderEnum } from "../../models/student";
 import { isDate } from "validator";
@@ -35,12 +35,10 @@ export const validateAddTeacher: RequestHandler<{}, {}, IAddTeacherBody> = (req,
 
 
     let genderStatus = validateRequiredString("gender", gender);
-
+    // if previous validation passed then run another validation
+    if (genderStatus.valid === true) genderStatus = validateGender(gender)
+    // if either one validation failed then add field error
     if (genderStatus.valid === false) errorObj.addFieldError("gender", genderStatus.errorMessage)
-    else {
-        genderStatus = validateGender(gender)
-        if (genderStatus.valid === false) errorObj.addFieldError("gender", genderStatus.errorMessage)
-    }
 
 
     let dateOfBirthStatus = validateRequiredString("dateOfBirth", dateOfBirth)
@@ -60,14 +58,4 @@ export const validateAddTeacher: RequestHandler<{}, {}, IAddTeacherBody> = (req,
 
     if (containsErrors(errorObj)) return res.status(422).json(errorObj)
     return next();
-}
-
-
-
-
-
-const validateGender = (gender: string): Valid | InValid => {
-    if (GenderEnum.find(g => g === gender) === undefined) return { valid: false, errorMessage: "Invalid value for gender" }
-
-    return { valid: true }
 }

@@ -5,7 +5,7 @@ import { addTeacher } from "../controllers/teacher/addTeacher";
 
 import { getTeachers } from "../controllers/teacher/getTeachers";
 
-import { validateId } from "../middlewares/class/validateId";
+import { validateId } from "../middlewares/validateId";
 
 import { updateTeacher } from "../controllers/teacher/updateTeacher";
 import { deleteTeacher } from "../controllers/teacher/deleteTeacher";

@@ -17,9 +17,8 @@ const studentSchema = new Schema({
         required: true
     },
     feesPaid: {
-        type: Number,
-        required: true,
-        default: 0
+        type: Boolean,
+        default: false
     },
     dateOfFeePayment: {
         type: Date

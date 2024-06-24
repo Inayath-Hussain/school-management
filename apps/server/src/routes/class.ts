@@ -8,7 +8,7 @@ import { getAllClasses } from "../controllers/class/getAllClasses";
 import { updateClass } from "../controllers/class/updateClass";
 
 import { deleteClass } from "../controllers/class/deleteClass";
-import { validateId } from "../middlewares/class/validateId";
+import { validateId } from "../middlewares/validateId";
 
 const router = Router();
 

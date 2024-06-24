@@ -1,3 +1,4 @@
+import { ClientSession } from "mongoose";
 import { Class } from "../models/class";
 
 class ClassService {
@@ -36,6 +37,11 @@ class ClassService {
 
     async deleteClass(id: string) {
         return await Class.findByIdAndDelete(id)
+    }
+
+
+    async getClassById(id: string, session: ClientSession | null = null) {
+        return await Class.findById(id, undefined, { session })
     }
 }
 
